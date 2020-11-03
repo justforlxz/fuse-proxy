@@ -22,6 +22,8 @@ static const std::list<std::string> root_dir{
     "/Documents",
     "/Pictures",
     "/Downloads",
+    "/Music",
+    "/Videos"
 };
 
 static std::string username()
