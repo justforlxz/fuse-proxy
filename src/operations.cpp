@@ -147,3 +147,42 @@ int Proxy::proxy_read(
 
     return res;
 }
+
+int Proxy::proxy_write(const char *           path,
+                           const char *           buf,
+                           size_t                 size,
+                           off_t                  offset,
+                           struct fuse_file_info *fi)
+{
+    int fd = fi ? open(original_path(path).c_str(), O_WRONLY) : fi->fh;
+
+    if (fd == -1) {
+        return -errno;
+    }
+
+    int res = pwrite(fd, buf, size, offset);
+
+    if (res == -1) {
+        res = -errno;
+    }
+
+    if (!fi) {
+        close(fd);
+    }
+
+    return res;
+}
+
+int Proxy::proxy_symlink(const char *from, const char *to)
+{
+    return symlink(from, to) == -1 ? -errno : 0;
+}
+
+int Proxy::proxy_readlink(const char *path, char *buf, size_t size)
+{
+    int res = readlink(original_path(path).c_str(), buf, size - 1);
+    if (res == -1) return -errno;
+
+    buf[res] = '\0';
+    return 0;
+}

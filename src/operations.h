@@ -30,6 +30,16 @@ public:
                           size_t                 size,
                           off_t                  offset,
                           struct fuse_file_info *fi);
+
+    static int proxy_write(const char *           path,
+                           const char *           buf,
+                           size_t                 size,
+                           off_t                  offset,
+                           struct fuse_file_info *fi);
+
+    static int proxy_symlink(const char *from, const char *to);
+
+    static int proxy_readlink(const char *path, char *buf, size_t size);
 };
 
 #endif  //
